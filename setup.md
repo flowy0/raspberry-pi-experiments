@@ -15,27 +15,41 @@ Vim, Docker, Bashrc - See https://github.com/flowy0/UsefulStuff/blob/main/setup_
 
 ## Install K3s 
 
-Update /boot/firmware/cmdline.txt
-https://docs.k3s.io/installation/requirements?os=pi
+Update `/boot/firmware/cmdline.txt` ,See https://docs.k3s.io/installation/requirements?os=pi
 
 append `cgroup_memory=1 cgroup_enable=memory` to `/boot/firmware/cmdline.txt`
 
 Use quick start script 
 
-curl -sfL https://get.k3s.io | sh -
+`curl -sfL https://get.k3s.io | sh -`
+
+## Check k3s is running 
 
 
-Deploy K8s Dashboard via Helm
-
-Install Helm 
+The error is due to file permissions.
+```bash
+g@pi3:~ $ kubectl get nodes
+WARN[0000] Unable to read /etc/rancher/k3s/k3s.yaml, please start server with --write-kubeconfig-mode or --write-kubeconfig-group to modify kube config permissions
+error: error loading config file "/etc/rancher/k3s/k3s.yaml": open /etc/rancher/k3s/k3s.yaml: permission denied
+g@pi3:~ $ sudo kubectl get nodes
+NAME   STATUS   ROLES           AGE   VERSION
+pi3    Ready    control-plane   53s   v1.34.4+k3s1
 ```
-curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-sudo apt-get install apt-transport-https --yes
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-sudo apt-get update
-sudo apt-get install helm
+
+
+
+ See fix at [Stack Exchange](https://devops.stackexchange.com/questions/16043/error-error-loading-config-file-etc-rancher-k3s-k3s-yaml-open-etc-rancher)
+
+
+```bash
+export KUBECONFIG=~/.kube/config
+mkdir ~/.kube 2> /dev/null
+sudo k3s kubectl config view --raw > "$KUBECONFIG"
+chmod 600 "$KUBECONFIG"
 ```
 
+
+# Update kubeconfig from your machine
 
 Copy the kubeconfig from sudo nano /etc/rancher/k3s/k3s.yaml to your local machine kubeconfig and edit the server name from 
 
@@ -45,23 +59,30 @@ to
 
 You can access the k3s cluster from your machine now 
 
-Deploy K8s Dashboard using your machine, see https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
 
+## Add a new agent node
+Get the token from the 1st node
+`sudo cat /var/lib/rancher/k3s/server/node-token`
+
+in the agent node machine:
+`export mynodetoken=yourtoken`
+
+run 
 ```
-# Add kubernetes-dashboard repository
-helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
-# Deploy a Helm Release named "kubernetes-dashboard" using the kubernetes-dashboard chart
-helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
+curl -sfL https://get.k3s.io | \
+K3S_URL=https://machine-ip:6443 \
+K3S_TOKEN=$mynodetoken \
+sh -
+```
+
+### Check for Status
+
+You should see something like this
+```
+g@pi3:~ $ kubectl get nodes
+NAME   STATUS   ROLES           AGE   VERSION
+pi3    Ready    control-plane   68m   v1.34.4+k3s1
+pi4    Ready    <none>          95s   v1.34.4+k3s1
 ```
 
 
-Port Forward and Access via https://localhost:8443
-
-```
-# Port forward for now, ingress to be setup later.
-kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
-```
-
-
-###  Links
-GPG Error: https://forums.raspberrypi.com/viewtopic.php?t=361409
