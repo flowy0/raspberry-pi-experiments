@@ -1,0 +1,45 @@
+models:
+  # ============================================================================
+  # Qwen 3.5 0.8B (non-thinking) - Standard 8K
+  # ============================================================================
+  qwen3.5:0.8b:
+    cmd: /home/g/llm-tools/bin/llama-server -m /home/g/llm-tools/models/Qwen3.5-0.8B-Q4_K_M.gguf --port ${PORT} --ctx-size 8192 --threads 3 --reasoning off
+
+  # ============================================================================
+  # Qwen 3.5 0.8B - Thinking Variants
+  # ============================================================================
+  qwen3.5:0.8b-thinking:
+    cmd: /home/g/llm-tools/bin/llama-server -m /home/g/llm-tools/models/Qwen3.5-0.8B-Q4_K_M.gguf --port ${PORT} --ctx-size 4096 --threads 3 --reasoning on
+  
+  qwen3.5:0.8b-thinking-8k:
+    cmd: /home/g/llm-tools/bin/llama-server -m /home/g/llm-tools/models/Qwen3.5-0.8B-Q4_K_M.gguf --port ${PORT} --ctx-size 8192 --threads 3 --reasoning on
+
+  # ============================================================================
+  # Qwen 2.5 0.5B - Context Variants (Small footprint = more options)
+  # ============================================================================
+  qwen2.5:0.5b:
+    cmd: /home/g/llm-tools/bin/llama-server -m /home/g/llm-tools/models/qwen2.5-0.5b-q4_k_m.gguf --port ${PORT} --ctx-size 4096 --threads 3
+  
+  qwen2.5:0.5b-8k:
+    cmd: /home/g/llm-tools/bin/llama-server -m /home/g/llm-tools/models/qwen2.5-0.5b-q4_k_m.gguf --port ${PORT} --ctx-size 8192 --threads 3
+  
+  qwen2.5:0.5b-16k:
+    cmd: /home/g/llm-tools/bin/llama-server -m /home/g/llm-tools/models/qwen2.5-0.5b-q4_k_m.gguf --port ${PORT} --ctx-size 16384 --threads 3
+
+  # ============================================================================
+  # TinyLlama 1.1B - Backup option
+  # ============================================================================
+  tinyllama:1.1b:
+    cmd: /home/g/llm-tools/bin/llama-server -m /home/g/llm-tools/models/tinyllama-1.1b-q4_k_m.gguf --port ${PORT} --ctx-size 4096 --threads 3
+
+  # ============================================================================
+  # Gemma 4 E2B (2.3B) - Context Variants with --mlock
+  # ============================================================================
+  gemma-4-e2b:8k:
+    cmd: /home/g/llm-tools/bin/llama-server -m /home/g/llm-tools/models/gemma-4-E2B-it-Q4_K_M.gguf --port ${PORT} --ctx-size 8192 --threads 3 --mlock --timeout 300
+  
+  gemma-4-e2b:16k:
+    cmd: /home/g/llm-tools/bin/llama-server -m /home/g/llm-tools/models/gemma-4-E2B-it-Q4_K_M.gguf --port ${PORT} --ctx-size 16384 --threads 3 --mlock --timeout 300
+  
+  gemma-4-e2b:24k:
+    cmd: /home/g/llm-tools/bin/llama-server -m /home/g/llm-tools/models/gemma-4-E2B-it-Q4_K_M.gguf --port ${PORT} --ctx-size 24576 --threads 3 --mlock --timeout 300
