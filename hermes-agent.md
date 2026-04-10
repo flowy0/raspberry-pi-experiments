@@ -50,6 +50,27 @@ The difficulty only started on Day 2.
    - qwen3.5:0.8b
    - qwen2.5:0.5b
    - gemma4:e2b
+
+**Full Speed Ranking (LLaMA.cpp, Pi 5):**
+
+| Model | Tok/s | TTFT (ms) | Total (s) |
+|-------|-------|-----------|-----------|
+| qwen2.5:0.5B (32K) | **31.3** | 970 | 8.2 |
+| qwen2.5:0.5B (16K) | **30.6** | 1474 | 7.5 |
+| qwen2.5:0.5B (8K) | **29.5** | 1453 | 8.2 |
+| qwen3.5:0.8B-thinking (8K) | 14.6 | 1520 | 19.5 |
+| qwen3.5:2b (8K) | 7.8 | 2401 | 30.1 |
+| gemma-4-e2b:8k | 6.5 | 4440 | 43.8 |
+
+**Key findings:**
+- **qwen2.5:0.5B is fastest** (~30 tok/s) regardless of context size — the 32K variant has best TTFT (970ms) and throughput
+- **qwen3.5:2b is 4x slower** than 0.5B (7.8 vs 30 tok/s) — significant speed cost for quality
+- **gemma-4-e2b** still broken on complex prompts, slowest overall
+- **Quality winner**: qwen3.5:2b — rich coherent outputs, tool use (Python code), proper multi-paragraph answers
+
+**Recommendation for trading advisor:**
+- Speed priority → `qwen2.5:0.5B-32K` (31 tok/s, fast TTFT)
+- Quality priority → `qwen3.5:2b` (7.8 tok/s, much richer reasoning)
   
      
 
