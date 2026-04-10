@@ -29,6 +29,7 @@ The difficulty only started on Day 2.
  - Small Models tested:
    - Gemma4:e2b
    - qwen3.5:4b
+   - qwen3.5:9b
    - qwen2.5:3b
 
 
@@ -38,8 +39,8 @@ The difficulty only started on Day 2.
  - Continued to research on even smaller models.
  - Smaller Models tested:
   - qwen3.5:0.8b
-
-
+  - gemma4:e2b 
+- Hit the issue with ollama not supporting qwen3.5 architecture and alternative quantized gemma4
 
 ## Day 5
  - Used Kimi Code to configure llama.cpp on the RPI5, instead of using ollama.
@@ -48,7 +49,7 @@ The difficulty only started on Day 2.
  - Small Models tested:
    - qwen3.5:0.8b
    - qwen2.5:0.5b
-   -  gemma4:e2b
+   - gemma4:e2b
   
      
 
